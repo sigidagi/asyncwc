@@ -297,8 +297,28 @@ lines:
   2.4 overhead factor;
 - about **$210,000** at a present-day salary of $120,000 per year.
 
-COCOMO is a rough, decades-old model. It describes the traditional cost of code this size,
-not what generating it with Claude Code cost.
+COCOMO is a rough, decades-old model. It describes the traditional cost of code this size;
+the actual cost of generating it follows.
+
+### What it actually cost
+
+The whole session, from the first question to this README, made 130 API calls to Claude
+Opus 5.5 at standard speed. Token counts come from the session transcript and are priced
+at Anthropic's API list rates:
+
+| Tokens | Count | Price per million | Cost |
+|---|---:|---:|---:|
+| Cache reads | 38,295,226 | $0.20 | $7.66 |
+| Output (incl. thinking) | 296,819 | $20.00 | $5.94 |
+| Cache writes (1-hour) | 434,324 | $8.00 | $3.47 |
+| Uncached input | 260 | $4.00 | $0.00 |
+| **Total** | **39,026,629** | | **$17.07** |
+
+Most tokens are cache reads: every call re-reads the conversation so far, and caching makes
+that 20 times cheaper than uncached input. About $11 of the total went into turning the spec
+into a working library; the rest went into tooling, CI and publishing. On a Claude
+subscription plan these tokens are not billed individually, so the figure is the equivalent
+API cost.
 
 ## License
 
