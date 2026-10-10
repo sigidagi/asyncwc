@@ -1,0 +1,114 @@
+{
+    "version": 6,
+    "cmakeMinimumRequired": {"major": 3, "minor": 25, "patch": 0},
+    "configurePresets": [
+        {
+            "name": "base",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
+        },
+        {
+            "name": "debug",
+            "displayName": "Debug",
+            "inherits": "base",
+            "cacheVariables": {"CMAKE_BUILD_TYPE": "Debug"}
+        },
+        {
+            "name": "release",
+            "displayName": "Release, warnings as errors",
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "ASYNCWC_WARNINGS_AS_ERRORS": "ON"
+            }
+        },
+        {
+            "name": "asan",
+            "displayName": "Debug with AddressSanitizer + UBSan",
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "ASYNCWC_ENABLE_SANITIZERS": "ON"
+            }
+        },
+        {
+            "name": "coverage",
+            "displayName": "Coverage (gcov/lcov)",
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "ASYNCWC_ENABLE_COVERAGE": "ON",
+                "ASYNCWC_BUILD_EXAMPLES": "OFF"
+            }
+        },
+        {
+            "name": "tidy",
+            "displayName": "Debug with clang-tidy on every compile",
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "ASYNCWC_ENABLE_CLANG_TIDY": "ON"
+            }
+        },
+        {
+            "name": "clang",
+            "displayName": "Debug built with clang++, warnings as errors",
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_CXX_COMPILER": "clang++",
+                "ASYNCWC_WARNINGS_AS_ERRORS": "ON"
+            }
+        }
+    ],
+    "buildPresets": [
+        {"name": "debug", "configurePreset": "debug"},
+        {"name": "release", "configurePreset": "release"},
+        {"name": "asan", "configurePreset": "asan"},
+        {"name": "coverage", "configurePreset": "coverage", "targets": ["coverage"]},
+        {"name": "tidy", "configurePreset": "tidy"},
+        {"name": "clang", "configurePreset": "clang"}
+    ],
+    "testPresets": [
+        {
+            "name": "base",
+            "hidden": true,
+            "output": {"outputOnFailure": true},
+            "execution": {"jobs": 8}
+        },
+        {"name": "debug", "inherits": "base", "configurePreset": "debug"},
+        {"name": "release", "inherits": "base", "configurePreset": "release"},
+        {"name": "asan", "inherits": "base", "configurePreset": "asan"},
+        {"name": "clang", "inherits": "base", "configurePreset": "clang"}
+    ],
+    "workflowPresets": [
+        {
+            "name": "debug",
+            "steps": [
+                {"type": "configure", "name": "debug"},
+                {"type": "build", "name": "debug"},
+                {"type": "test", "name": "debug"}
+            ]
+        },
+        {
+            "name": "clang",
+            "steps": [
+                {"type": "configure", "name": "clang"},
+                {"type": "build", "name": "clang"},
+                {"type": "test", "name": "clang"}
+            ]
+        },
+        {
+            "name": "asan",
+            "steps": [
+                {"type": "configure", "name": "asan"},
+                {"type": "build", "name": "asan"},
+                {"type": "test", "name": "asan"}
+            ]
+        }
+    ]
+}

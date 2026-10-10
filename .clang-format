@@ -1,0 +1,38 @@
+---
+# Requires clang-format 16 or newer.
+Language: Cpp
+BasedOnStyle: LLVM
+Standard: Latest
+ColumnLimit: 100
+IndentWidth: 4
+AccessModifierOffset: -4
+NamespaceIndentation: None
+FixNamespaceComments: true
+PointerAlignment: Left
+ReferenceAlignment: Pointer
+DerivePointerAlignment: false
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortLambdasOnASingleLine: All
+AllowShortEnumsOnASingleLine: true
+AlwaysBreakTemplateDeclarations: Yes
+BreakConstructorInitializers: BeforeColon
+PackConstructorInitializers: NextLine
+BreakBeforeBraces: Attach
+InsertBraces: true
+InsertNewlineAtEOF: true
+SeparateDefinitionBlocks: Always
+SpaceBeforeCpp11BracedList: false
+Cpp11BracedListStyle: true
+IncludeBlocks: Regroup
+IncludeCategories:
+  # The header of a .cpp file (main include) stays first automatically.
+  - Regex: '^"'
+    Priority: 1
+  - Regex: '^<(gtest|gmock)/'
+    Priority: 2
+  - Regex: '^<(asyncwc|boost|spdlog|fmt)/'
+    Priority: 3
+  - Regex: '^<'
+    Priority: 4

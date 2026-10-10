@@ -1,0 +1,8 @@
+---
+# Examples favour brevity: plain argv indexing, no try/catch around main, and coroutines
+# that borrow objects owned by main().
+InheritParentConfig: true
+Checks: >
+  -bugprone-exception-escape,
+  -cppcoreguidelines-avoid-reference-coroutine-parameters,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,

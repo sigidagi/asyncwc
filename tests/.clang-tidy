@@ -1,0 +1,20 @@
+---
+# GoogleTest macros and the coroutine based test scaffolding trip a few checks that make no
+# sense for test code. Tests also cast out-of-range enum values on purpose.
+InheritParentConfig: true
+Checks: >
+  -bugprone-exception-escape,
+  -bugprone-unchecked-optional-access,
+  -cert-err58-cpp,
+  -clang-analyzer-optin.core.EnumCastOutOfRange,
+  -cppcoreguidelines-avoid-capturing-lambda-coroutines,
+  -cppcoreguidelines-avoid-do-while,
+  -cppcoreguidelines-avoid-goto,
+  -cppcoreguidelines-avoid-non-const-global-variables,
+  -cppcoreguidelines-avoid-reference-coroutine-parameters,
+  -cppcoreguidelines-non-private-member-variables-in-classes,
+  -cppcoreguidelines-owning-memory,
+  -cppcoreguidelines-pro-bounds-avoid-unchecked-container-access,
+  -cppcoreguidelines-pro-type-vararg,
+  -readability-function-cognitive-complexity,
+  -readability-identifier-naming,
