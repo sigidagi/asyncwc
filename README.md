@@ -241,6 +241,65 @@ examples/          echo_server, simple_client, reconnecting_client
 cmake/             dependencies, warnings, sanitizers, coverage, clang tools, install
 ```
 
+## How this project was made
+
+asyncwc was written by [Claude Code](https://claude.com/claude-code) (model Claude Opus 5.5,
+effort level "xhigh") in a single session. Roughly an hour passed between the first file and
+the tagged v1.0.0 commit. The complete specification was this one prompt:
+
+> spec:I need that you will create a c++ websocket client (only non-secure) using c++20
+> coroutines and boost::asio::io_context event loop; Consider other boost libraries only if
+> it provide more redability. Make CMakeLists.txt, provide clang-format and clang-tidy tools
+> can be used in the project. Add reconnect posibility if websocket server disconnects,
+> ping/pong. Write gtests for full code coverage. for logging use spglog lib. Do not forget
+> to provide nice error handling - you can consider std::expect or choose your own. Add some
+> very simple examples in separate directory. Ask me only if you need something important to
+> consider, otherwise Implement everything without prompting to console questions. name lib
+> asyncwc
+
+The work went roughly like this:
+
+1. **Setup and design.** Claude checked the installed toolchain (GCC 16, Boost 1.92, spdlog,
+   GoogleTest, lcov) and designed the layering: `Connection`, `Client` built on top of it, and
+   shared implementation objects that keep pending coroutines safe.
+2. **First run.** It wrote the library, then the tests against an in-process Beast server.
+   107 of the first 114 tests passed.
+3. **Fixing the failures.** The failures exposed:
+   - Beast's behaviour when `close()` overlaps a pending read, now reconciled in
+     `ConnectionImpl`.
+   - A test-server bug: handlers were copied per connection.
+   - A test with a missing disconnect trigger.
+4. **Hardening.** ASan + UBSan, 100% line and function coverage, clang-tidy with zero
+   findings, clang-format, Release with `-Werror`, a Clang build, and repeated runs to rule
+   out flaky tests.
+5. **Human input.** The author supplied the specification, `scripts/check.sh`, and the
+   requests for the LICENSE, CI, badges and the v1.0.0 release.
+
+### Size
+
+Physical source lines of C++, without comments and blank lines, counted with
+David A. Wheeler's SLOCCount:
+
+| Part | Files | Lines of code |
+|---|---:|---:|
+| Library (`include/`, `src/`) | 22 | 1,508 |
+| Tests (`tests/`) | 13 | 1,752 |
+| Examples (`examples/`) | 3 | 164 |
+| **Total** | **38** | **3,424** |
+
+### What it would cost to write by hand
+
+SLOCCount's Basic COCOMO model estimates the conventional development effort for 3,424
+lines:
+
+- about **8.7 person-months** of effort over a 5.7-month schedule;
+- about **$98,000** at SLOCCount's default salary of $56,286 per year (from 2004), with a
+  2.4 overhead factor;
+- about **$210,000** at a present-day salary of $120,000 per year.
+
+COCOMO is a rough, decades-old model. It describes the traditional cost of code this size,
+not what generating it with Claude Code cost.
+
 ## License
 
 MIT, see [LICENSE](LICENSE). Release notes are in [CHANGELOG.md](CHANGELOG.md).
