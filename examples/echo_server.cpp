@@ -21,7 +21,7 @@
 namespace asio = boost::asio;
 namespace beast = boost::beast;
 namespace websocket = beast::websocket;
-using tcp = asio::ip::tcp;
+using asio::ip::tcp;
 
 namespace {
 
@@ -58,7 +58,7 @@ asio::awaitable<void> listen(tcp::endpoint endpoint) {
 
 } // namespace
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv) { // NOLINT(misc-const-correctness): fixed signature
     std::uint16_t port = 8080;
     if (argc > 1) {
         const std::string_view text{argv[1]};

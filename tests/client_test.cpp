@@ -352,7 +352,7 @@ TEST_F(ClientTest, StopWhileWaitingToReconnect) {
     client.on_reconnect([&](std::size_t, std::chrono::milliseconds) {
         asio::co_spawn(
             io,
-            [&]() -> asio::awaitable<void> {
+            [&] -> asio::awaitable<void> {
                 co_await test::sleep_for(20ms);
                 client.stop();
             },
@@ -440,7 +440,7 @@ TEST_F(ClientTest, CloseReportsAFailedClosingHandshake) {
 
 TEST_F(ClientTest, AsioCancellationEndsRun) {
     Client client{io.get_executor(), fast_config(server.url())};
-    run([&]() -> asio::awaitable<void> {
+    run([&] -> asio::awaitable<void> {
         using namespace asio::experimental::awaitable_operators;
         const auto winner = co_await (client.run() || test::sleep_for(50ms));
         EXPECT_EQ(winner.index(), 1U);
@@ -453,7 +453,7 @@ TEST_F(ClientTest, AsioCancellationWhileWaitingToReconnect) {
     config.reconnect.initial_delay = 1h;
     config.reconnect.max_delay = 1h;
     Client client{io.get_executor(), config};
-    run([&]() -> asio::awaitable<void> {
+    run([&] -> asio::awaitable<void> {
         using namespace asio::experimental::awaitable_operators;
         co_await (client.run() || test::sleep_for(50ms));
     }());
@@ -472,7 +472,7 @@ TEST_F(ClientTest, HandlerExceptionsAreContained) {
         if (++messages == 2) {
             close_soon(client);
         }
-        throw 7; // NOLINT(hicpp-exception-baseclass)
+        throw 7; // NOLINT(hicpp-exception-baseclass,bugprone-std-exception-baseclass)
     });
     ASSERT_TRUE(run(client.run()));
     EXPECT_EQ(messages, 2);

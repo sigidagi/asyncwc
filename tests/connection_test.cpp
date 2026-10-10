@@ -83,8 +83,10 @@ TEST_F(ConnectionTest, ConnectsToAnEndpoint) {
 TEST_F(ConnectionTest, SendsUserAgentHostAndCustomHeaders) {
     ConnectionOptions options;
     options.user_agent = "tester/1.0";
-    options.headers = {{.name = "Authorization", .value = "Bearer token"},
-                       {.name = "Sec-WebSocket-Protocol", .value = "chat"}};
+    options.headers = {
+        {.name = "Authorization", .value = "Bearer token"},
+        {.name = "Sec-WebSocket-Protocol", .value = "chat"},
+    };
     // Echo the requested sub-protocol, otherwise the client rejects the handshake.
     server.on_connection([](std::shared_ptr<ServerSession> session) -> asio::awaitable<void> {
         session->stream().set_option(
@@ -312,7 +314,7 @@ TEST_F(ConnectionTest, PongHandlerExceptionsAreContained) {
         if (payload == "std") {
             throw std::runtime_error{"boom"};
         }
-        throw 42; // NOLINT(hicpp-exception-baseclass)
+        throw 42; // NOLINT(hicpp-exception-baseclass,bugprone-std-exception-baseclass)
     });
 
     ASSERT_TRUE(run(connection->ping("std")));

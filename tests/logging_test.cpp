@@ -30,14 +30,14 @@ TEST_F(LoggingTest, DefaultLoggerIsNamedAsyncwc) {
 }
 
 TEST_F(LoggingTest, SetLoggerReplacesTheLogger) {
-    auto custom =
+    const auto custom =
         std::make_shared<spdlog::logger>("custom", std::make_shared<spdlog::sinks::null_sink_mt>());
     set_logger(custom);
     EXPECT_EQ(logger(), custom);
 }
 
 TEST_F(LoggingTest, DefaultPrefersARegisteredAsyncwcLogger) {
-    auto registered = std::make_shared<spdlog::logger>(
+    const auto registered = std::make_shared<spdlog::logger>(
         "asyncwc", std::make_shared<spdlog::sinks::null_sink_mt>());
     spdlog::register_logger(registered);
     set_logger(nullptr);

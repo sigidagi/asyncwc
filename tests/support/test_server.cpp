@@ -28,7 +28,7 @@ asio::awaitable<void> accept_loop(std::shared_ptr<ServerState> state) {
             co_return;
         }
         ++state->connections;
-        auto session = std::make_shared<ServerSession>(std::move(socket), state);
+        const auto session = std::make_shared<ServerSession>(std::move(socket), state);
         state->sessions.push_back(session);
         asio::co_spawn(state->acceptor.get_executor(), run_handler(state->handler, session),
                        asio::detached);
@@ -52,7 +52,7 @@ asio::awaitable<bool> ServerSession::read_request() {
     if (ec) {
         co_return false;
     }
-    if (auto server = server_.lock()) {
+    if (const auto server = server_.lock()) {
         server->requests.push_back(request_);
     }
     co_return true;

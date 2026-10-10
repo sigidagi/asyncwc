@@ -29,7 +29,7 @@ namespace asio = boost::asio;
 namespace beast = boost::beast;
 namespace http = beast::http;
 namespace websocket = beast::websocket;
-using tcp = asio::ip::tcp;
+using asio::ip::tcp;
 
 using Request = http::request<http::string_body>;
 

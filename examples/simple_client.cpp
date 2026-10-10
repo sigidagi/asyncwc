@@ -39,7 +39,7 @@ asio::awaitable<void> talk(std::string url) {
 
 } // namespace
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv) { // NOLINT(misc-const-correctness): fixed signature
     const std::string url = argc > 1 ? argv[1] : "ws://127.0.0.1:8080";
 
     asio::io_context io;

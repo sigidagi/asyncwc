@@ -81,9 +81,11 @@ TEST(ConfigTest, RejectsHeadersOwnedByTheHandshake) {
 
 TEST(ConfigTest, AcceptsCustomHeaders) {
     ConnectionOptions options;
-    options.headers = {{.name = "Authorization", .value = "Bearer abc"},
-                       {.name = "Sec-WebSocket-Protocol", .value = "chat"},
-                       {.name = "X-Custom_Header.1~", .value = ""}};
+    options.headers = {
+        {.name = "Authorization", .value = "Bearer abc"},
+        {.name = "Sec-WebSocket-Protocol", .value = "chat"},
+        {.name = "X-Custom_Header.1~", .value = ""},
+    };
     EXPECT_TRUE(validate(options));
 }
 

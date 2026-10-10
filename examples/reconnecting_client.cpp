@@ -41,7 +41,7 @@ asio::awaitable<void> ticker(asyncwc::Client& client) {
 
 } // namespace
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv) { // NOLINT(misc-const-correctness): fixed signature
     asyncwc::logger()->set_level(spdlog::level::debug);
 
     asyncwc::ClientConfig config;

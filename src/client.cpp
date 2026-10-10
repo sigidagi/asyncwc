@@ -75,7 +75,7 @@ asio::awaitable<Result<void>> ClientImpl::run() {
 
     running_ = true;
     stop_requested_ = false;
-    const ScopeExit finish{[this]() noexcept {
+    const ScopeExit finish{[this] noexcept {
         running_ = false;
         connection_.reset();
         state_ = ClientState::stopped;
@@ -113,7 +113,7 @@ asio::awaitable<Result<void>> ClientImpl::run() {
 
 asio::awaitable<ClientImpl::SessionResult> ClientImpl::run_session(Endpoint endpoint) {
     state_ = ClientState::connecting;
-    auto connection = std::make_shared<ConnectionImpl>(executor_, config_.connection);
+    const auto connection = std::make_shared<ConnectionImpl>(executor_, config_.connection);
     connection_ = connection;
     connection->set_pong_handler([weak = weak_from_this()](std::string_view) {
         if (const auto self = weak.lock()) {

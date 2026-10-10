@@ -75,7 +75,10 @@ TEST(ErrorTest, MessageCombinesOperationCodeAndDetail) {
     EXPECT_EQ(plain.message(), "handshake: operation timed out");
 
     const Error detailed{
-        .code = Errc::handshake_rejected, .operation = Operation::handshake, .detail = "HTTP 403"};
+        .code = Errc::handshake_rejected,
+        .operation = Operation::handshake,
+        .detail = "HTTP 403",
+    };
     EXPECT_EQ(detailed.message(),
               "handshake: WebSocket handshake rejected by the server (HTTP 403)");
 }

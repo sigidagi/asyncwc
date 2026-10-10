@@ -39,7 +39,7 @@ TEST(AsyncMutexTest, SerializesCoroutinesInArrivalOrder) {
 TEST(AsyncMutexTest, MovedLockReleasesOnlyOnce) {
     asio::io_context io;
     AsyncMutex mutex{io.get_executor()};
-    test::run(io, [&]() -> asio::awaitable<void> {
+    test::run(io, [&] -> asio::awaitable<void> {
         {
             auto first = co_await mutex.lock();
             const auto moved = std::move(first);
@@ -52,7 +52,7 @@ TEST(KeepAliveTest, HoldsTheOwnerUntilTheOperationFinishes) {
     asio::io_context io;
     auto owner = std::make_shared<int>(1);
     const std::weak_ptr<int> weak = owner;
-    auto operation = keep_alive(std::move(owner), []() -> asio::awaitable<int> { co_return 7; }());
+    auto operation = keep_alive(std::move(owner), [] -> asio::awaitable<int> { co_return 7; }());
     EXPECT_FALSE(weak.expired());
     EXPECT_EQ(test::run(io, std::move(operation)), 7);
     EXPECT_TRUE(weak.expired());
@@ -61,7 +61,7 @@ TEST(KeepAliveTest, HoldsTheOwnerUntilTheOperationFinishes) {
 TEST(ScopeExitTest, RunsOnScopeExit) {
     int calls = 0;
     {
-        const ScopeExit guard{[&]() noexcept { ++calls; }};
+        const ScopeExit guard{[&] noexcept { ++calls; }};
         EXPECT_EQ(calls, 0);
     }
     EXPECT_EQ(calls, 1);
